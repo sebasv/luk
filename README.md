@@ -1,6 +1,13 @@
 # luk
 
-Create static HTML inside Python. No templates, just Python. Create objects directly or use the context manager to use control flow like `if/else`, add objects in loops, etcetera.
+Create static HTML inside Python. No templates, no dependencies, just Python. Create objects directly or use the context manager to use control flow like `if/else`, add objects in loops, etcetera. Examples below 👇
+
+## Why luk?
+
+* Luk lets you write HTML from within python. You don't have to learn the DSL of a template engine like `jinja` to build a html page.
+* Luk is lightweight. Just some very simple python, no bells or whistles.
+* Luk is friendly to static type checkers
+* Luk is idiomatic Python. `htpy` does a similar thing but they use a trick on the index operator (`[]`). I understand they did it to separate attributes and children, but I prefer a more pythonic feel.
 
 ## Installation
 
@@ -25,6 +32,22 @@ page = luk.Html(
 )
 
 print(page.serialize())
+
+# or serve from a fastapi/flask/whatever endpoint!
+import flask
+
+app = flask.Flask(__name__)
+
+@app.route("/hello/<name>")
+def hello_name_page(name):
+    page = luk.Html(
+        luk.Head(luk.Title(f"Hello, {name}!")),
+        luk.Body(
+            luk.H1(f"Welcome, {name}!"),
+            luk.P("This page was generated using luk and a Flask route parameter."),
+        ),
+    )
+    return page.serialize()
 ```
 
 Output:
